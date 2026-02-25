@@ -26,6 +26,36 @@ float calculatePercentage(Student *s) {
     return total / 6.0; // 5 subjects + extra
 }
 
+// 🔥 File Handling: Save report card to .txt file
+void saveReportToFile(Student s) {
+    FILE *fp;
+    char filename[50];
+
+    sprintf(filename, "student_%d.txt", s.id); // file name based on ID
+    fp = fopen(filename, "w");
+
+    if (fp == NULL) {
+        printf("Error creating file!\n");
+        return;
+    }
+
+    fprintf(fp, "===== Student Report Card =====\n");
+    fprintf(fp, "ID: %d\n", s.id);
+    fprintf(fp, "Name: %s\n", s.name);
+    fprintf(fp, "Attendance: %d\n", s.attendance);
+
+    fprintf(fp, "\nMarks:\n");
+    for (int i = 0; i < SUBJECTS; i++) {
+        fprintf(fp, "Subject %d: %d\n", i + 1, s.marks[i]);
+    }
+
+    fprintf(fp, "Extra-Curricular Marks: %d\n", s.extra);
+    fprintf(fp, "Percentage: %.2f%%\n", s.percentage);
+
+    fclose(fp);
+    printf("Report card saved as %s\n", filename);
+}
+
 // Add student
 void addStudent() {
     if (count >= MAX) {
@@ -56,6 +86,9 @@ void addStudent() {
     students[count++] = s;
 
     printf("Student added successfully!\n");
+
+    // 🔥 File Handling call
+    saveReportToFile(s);
 }
 
 // Display report card
